@@ -1,18 +1,38 @@
 import { Day } from "../../day";
 
 class Day1 extends Day {
+	constructor() {
+		super(1);
+	}
 
-    constructor(){
-        super(1);
-    }
+	solveForPartOne(input: string): string {
+		const lines: string[] = input.split("\n");
+		const lineNumbers: number[] = [];
 
-    solveForPartOne(input: string): string {
-        return input;
-    }
+		const getNumbers = (arg: string[]) => {
+			let numbersInArray = arg.filter((character) =>
+				Number(!isNaN(+character))
+			);
+			const getRowNumber = () => {
+				return numbersInArray[0] + numbersInArray[numbersInArray.length - 1];
+			};
+			const rowNumber = getRowNumber();
+			lineNumbers.push(+rowNumber);
+		};
 
-    solveForPartTwo(input: string): string {
-        return input;
-    }
+		lines.forEach((row) => {
+			const splittedRow = row.split("");
+			getNumbers(splittedRow);
+		});
+
+		let solution = lineNumbers.reduce((a, b) => a + b);
+
+		return solution.toString();
+	}
+
+	solveForPartTwo(input: string): string {
+		return input;
+	}
 }
 
-export default new Day1;
+export default new Day1();
