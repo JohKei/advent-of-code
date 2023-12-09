@@ -64,7 +64,7 @@ const solutionOne = (input: string) => {
 						) ?? 0;
             let green = Number(
 							cubes
-								.find((cube) => cube.includes("blue"))
+								.find((cube) => cube.includes("green"))
 								?.split("")
 								.filter((character) => !isNaN(+character))
 								.join("")
