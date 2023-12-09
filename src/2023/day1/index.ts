@@ -42,20 +42,27 @@ const getSolutionOne = (input: string) => {
 	return solution.toString();
 };
 
-const writtenNumbers = [
-	"one",
-	"two",
-	"three",
-	"four",
-	"five",
-	"six",
-	"seven",
-	"eight",
-	"nine",
-];
-
 const getSolutionTwo = (input: string) => {
-	// Todo: Day1 part2
-	return "hello";
-};
 
+	let lines = input.replace(/one/gi, 'oonee')
+	lines = lines.replace(/two/gi, "ttwoo")
+	lines = lines.replace(/three/gi, 'tthreee')
+	lines = lines.replace(/four/gi, "ffourr")
+	lines = lines.replace(/five/gi, 'ffivee')
+	lines = lines.replace(/six/gi, 'ssixx')
+	lines = lines.replace(/seven/gi, 'ssevenn')
+	lines = lines.replace(/eight/gi, 'eeightt')
+	lines = lines.replace(/nine/gi, 'nninee')
+
+	lines = lines.replace(/one/gi, "1");
+	lines = lines.replace(/two/gi, "2");
+	lines = lines.replace(/three/gi, "3");
+	lines = lines.replace(/four/gi, "4");
+	lines = lines.replace(/five/gi, "5");
+	lines = lines.replace(/six/gi, "6");
+	lines = lines.replace(/seven/gi, "7");
+	lines = lines.replace(/eight/gi, "8");
+	lines = lines.replace(/nine/gi, "9");
+
+	return getSolutionOne(lines);
+};
