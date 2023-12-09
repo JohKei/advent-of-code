@@ -36,7 +36,7 @@ const getBagGrab = (game: string) => {
 
 const getCubeNumber = (hand: string, color: "blue" | "red" | "green") => {
 	let cubes = hand.split(", ");
-    
+
 	return (
 		Number(
 			cubes
@@ -102,7 +102,45 @@ const solutionOne = (input: string) => {
 };
 
 const solutionTwo = (input: string) => {
-	return "solutionTwo";
+	// get the lowest amount of each color in each game
+	// for-each game -> multiple green * blue * red
+	// solution = each-game's - sum of multiplications
+
+	let solution = 0;
+	let games = splitGames(input);
+	// console.log(games);
+
+	games.forEach((game) => {
+		let gameId = getGameIdNumber(game);
+		// console.log(gameId)
+		let bagGrabs = getBagGrab(game);
+		// console.log(bagGrabs)
+		let lowestGreen = 1;
+		let lowestRed = 1;
+		let lowestBlue = 1;
+
+		bagGrabs.forEach((hand) => {
+			let blue = getCubeNumber(hand, "blue");
+			let green = getCubeNumber(hand, "green");
+			let red = getCubeNumber(hand, "red");
+
+			if (!isNaN(blue)) {
+				if (blue > lowestBlue) lowestBlue = blue;
+			}
+
+			if (!isNaN(green)) {
+				if (green > lowestGreen) lowestGreen = green;
+			}
+
+			if (!isNaN(red)) {
+				if (red > lowestRed) lowestRed = red;
+			}
+		});
+        solution += (lowestBlue * lowestGreen * lowestRed)
+        // console.log('game',gameId , 'blue', lowestBlue,'green', lowestGreen,'red', lowestRed)
+	});
+
+	return solution.toString();
 };
 
 class GameStatus {
