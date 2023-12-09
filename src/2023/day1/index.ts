@@ -55,5 +55,7 @@ const writtenNumbers = [
 ];
 
 const getSolutionTwo = (input: string) => {
+	// Todo: Day1 part2
 	return "hello";
 };
+
