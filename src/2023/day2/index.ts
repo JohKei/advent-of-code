@@ -7,7 +7,7 @@ class Day2 extends Day {
     }
 
     solveForPartOne(input: string): string {
-        return input;
+        return solutionOne(input);
     }
 
     solveForPartTwo(input: string): string {
@@ -16,3 +16,7 @@ class Day2 extends Day {
 }
 
 export default new Day2;
+
+const solutionOne = (input: string) => {
+    return 'solution One'
+}
