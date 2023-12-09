@@ -6,51 +6,26 @@ class Day1 extends Day {
 	}
 
 	solveForPartOne(input: string): string {
-        return getSolution(input)
-    }
+		return getSolutionOne(input);
+	}
 
 	solveForPartTwo(input: string): string {
-		return getSolution(input);
+		return getSolutionTwo(input);
 	}
 }
 
 export default new Day1();
 
-const writtenNumbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
-
-
-const getSolution = (input: string) => {
-
+const getSolutionOne = (input: string) => {
 	const lines: string[] = input.split("\n");
 	const lineNumbers: number[] = [];
 
-
 	const getNumbers = (splittedRow: string[], fullRow: string) => {
-        // Information: for part 2 I need: 
-        // Information: indexOf, lastIndexOf, slice
+		let words: number[] = [];
 
-        let words :number[]= []
-
-        
-        writtenNumbers.forEach((number:string) => {
-            let firstIndex = 0 
-            firstIndex = fullRow.indexOf(number)
-            let lastIndex = 0 
-            lastIndex = fullRow.lastIndexOf(number)
-            
-            let word = fullRow.slice(firstIndex, lastIndex)
-            if(word) console.log(word, 'word...')
-            if (writtenNumbers.includes(word)){
-                words.push(firstIndex, lastIndex)
-                console.log(words)
-            }
-        })
-        // if (words.length){
-        //     console.log(words, fullRow)
-        // }
-
-
-		let numbersInArray = splittedRow.filter((character) => Number(!isNaN(+character)));
+		let numbersInArray = splittedRow.filter((character) =>
+			Number(!isNaN(+character))
+		);
 		const getRowNumber = () => {
 			return numbersInArray[0] + numbersInArray[numbersInArray.length - 1];
 		};
@@ -65,4 +40,20 @@ const getSolution = (input: string) => {
 
 	let solution = lineNumbers.reduce((a, b) => a + b);
 	return solution.toString();
+};
+
+const writtenNumbers = [
+	"one",
+	"two",
+	"three",
+	"four",
+	"five",
+	"six",
+	"seven",
+	"eight",
+	"nine",
+];
+
+const getSolutionTwo = (input: string) => {
+	return "hello";
 };
