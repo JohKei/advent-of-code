@@ -21,6 +21,7 @@ class Day3 extends Day {
 		lines.forEach((line, indexOfLine) => {
 			numbersPerLineStrings[indexOfLine].forEach((number) => {
 				if (numbersPerLineStrings[indexOfLine].filter((value) => value === number).length > 1) {
+					// console.log('duplicate......', number, line)
 					duplicatedNumbers.push(number);
 					allNumbers.push(new InputNumber(indexOfLine, +number, line.indexOf(number)));
 					allNumbers.push(new InputNumber(indexOfLine, +number, line.lastIndexOf(number)));
@@ -36,53 +37,66 @@ class Day3 extends Day {
 			let prevLine = number.line === 0 ? null : number.line - 1;
 			let nextLine = number.line === lines.length - 1 ? null : number.line + 1;
 
-			if (regexRules.test(lines[number.line][startIndex])) {
-				number.isValid = true;
-			}
-			if (regexRules.test(lines[number.line][endIndex])) {
-				number.isValid = true;
-				// console.log(lines[number.line]);
-				// console.log(number);
-			}
-			// test previousLine
-			if (prevLine !== null) {
-				for (let i = startIndex; i <= endIndex; i++) {
-					if (regexRules.test(lines[prevLine][i])) {
-						number.isValid = true;
-						continue;
-					}
+			if (prevLine) {
+				if (regexRules.test(lines[prevLine].slice(startIndex, endIndex + 1))) {
+					number.isValid = true;
 				}
 			}
-			//test nextLine
-			if (nextLine !== null) {
-				for (let i = startIndex; i <= endIndex; i++) {
-					if (regexRules.test(lines[nextLine][i])) {
-						number.isValid = true;
-						continue;
-					}
+			if (regexRules.test(lines[number.line].slice(startIndex, endIndex + 1))) {
+				number.isValid = true;
+			}
+			if (nextLine) {
+				if (regexRules.test(lines[nextLine].slice(startIndex, endIndex + 1))) {
+					number.isValid = true;
 				}
 			}
+			// if (regexRules.test(lines[number.line][startIndex])) {
+			// 	number.isValid = true;
+			// }
+			// if (regexRules.test(lines[number.line][endIndex])) {
+			// 	number.isValid = true;
+			// 	// console.log(lines[number.line]);
+			// 	// console.log(number);
+			// }
+			// // test previousLine
+			// if (prevLine !== null) {
+			// 	for (let i = startIndex; i <= endIndex; i++) {
+			// 		if (regexRules.test(lines[prevLine][i])) {
+			// 			number.isValid = true;
+			// 			continue;
+			// 		}
+			// 	}
+			// }
+			// //test nextLine
+			// if (nextLine !== null) {
+			// 	for (let i = startIndex; i <= endIndex; i++) {
+			// 		if (regexRules.test(lines[nextLine][i])) {
+			// 			number.isValid = true;
+			// 			continue;
+			// 		}
+			// 	}
+			// }
 
-			console.log("");
-			console.log("");
-			console.log("");
-			console.log("");
-			console.log("");
-			console.log("");
-			if (prevLine) console.log(lines[prevLine]);
-			console.log(lines[number.line]);
-			if (nextLine) console.log(lines[nextLine]);
-			console.log("");
-			if (prevLine) console.log(lines[prevLine].slice(startIndex, endIndex + 1), "prevLine");
-			console.log(lines[number.line].slice(startIndex, endIndex + 1), "currentLine");
-			if (nextLine) console.log(lines[nextLine].slice(startIndex, endIndex + 1), "nextLine");
-			console.log("");
-			// test currentLine
-			console.log("has Duplicate", duplicatedNumbers.includes(number.number.toString()));
-			console.log("is Valid", number.isValid);
-			console.log("");
+			// 	console.log("");
+			// console.log("");
+			// console.log("");
+			// console.log("");
+			// console.log("");
+			// console.log("");
+			// if (prevLine) console.log(lines[prevLine]);
+			// console.log(lines[number.line]);
+			// if (nextLine) console.log(lines[nextLine]);
+			// console.log("");
+			// if (prevLine) console.log(lines[prevLine].slice(startIndex, endIndex + 1), "prevLine");
+			// console.log(lines[number.line].slice(startIndex, endIndex + 1), "currentLine");
+			// if (nextLine) console.log(lines[nextLine].slice(startIndex, endIndex + 1), "nextLine");
+			// console.log("");
+			// // test currentLine
+			// console.log("has Duplicate", duplicatedNumbers.includes(number.number.toString()));
+			// console.log("is Valid", number.isValid);
+			// console.log("");
 
-			console.log(number);
+			// console.log(number);
 
 			// if (lines[number.line].slice(startIndex, endIndex) === '.776*'){
 			//     console.log(lines[number.line][endIndex-1])
