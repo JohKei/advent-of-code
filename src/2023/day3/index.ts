@@ -8,69 +8,63 @@ class Day3 extends Day {
 	solveForPartOne(input: string): string {
 		// Information: valid numbers n-1 , n , n+1
 
-		let regexSymbols = new RegExp("(\\*|\\+|\\$|\\#)", "g");
-		let regexNumbers = new RegExp("[0-9]", "g");
+		let regexSymbols = new RegExp("\\W", "g");
+        let regexRules = new RegExp("[^a-zA-Z0-9.]", "g");
+		// let regexNumbers = new RegExp("[0-9]", "g");
 
 		let lines = input.split("\n");
-		let splittedInput = lines.map((line) => line.split(""));
 
-		// Done: I need all numbers
-		let allNumbers: InputNumber[] = [];
+let numbersPerLineStrings = lines.map((line) =>
+    line.split(regexSymbols).filter((value) => value !== "")
+);
+
+// Done: I need all numbers
+let allNumbers: InputNumber[] = [];
 		// Done: getIndexOf Number number.length lastIndex of Number
 		lines.forEach((line, indexOfLine) => {
-			let numbers = line.split(".").filter((number) => number.length);
-			numbers.forEach((number) => {
-
-                let realNumber = number.split("").filter((character) => !isNaN(+character)).join("")
-                // console.log(number.split("").filter((character) => !isNaN(+character)).join(""))
-
-                // console.log('realNumber', Number(realNumber))
-                console.log('valid number', typeof(realNumber), realNumber)
-				if (!isNaN(+number)) {
-					allNumbers.push(
-						new InputNumber(indexOfLine, +number, line.indexOf(number))
-					);
-				}
+			numbersPerLineStrings[indexOfLine].forEach((number) => {
+				allNumbers.push(
+					new InputNumber(indexOfLine, +number, line.indexOf(number))
+				);
 			});
 		});
+
 		// Done: forEach number.
 
 		// Done: while let i = startIndex, while i <= indexEnd, i++{ check for lines-1, currentLine, lines+1}
 		allNumbers.forEach((number) => {
-			let isValidNumber = true;
 			for (
 				let i = number.indexStart === 0 ? 0 : number.indexStart - 1;
 				i <= number.indexEnd + 1;
 				i++
 			) {
-				let previousLine = number.line === 0 ? null : number.line - 1;
-				let currentLine = number.line;
+				let previousLine = number.line === 0 ? null : lines[number.line - 1];
+				let currentLine = lines[number.line];
 				let nextLine =
-					number.line === allNumbers.length ? null : number.line + 1;
-
-				// Done: check previous Line
-				if (previousLine) {
-					if (regexSymbols.test(lines[previousLine].charAt(i)))
+					number.line >= allNumbers.length - 1 ? null : lines[number.line + 1];
+				// check previous Line
+				if (previousLine !== null && previousLine !== undefined) {
+					if (regexRules.test(previousLine.charAt(i))) {
 						number.isValid = true;
+					}
 				}
-				// Done: Check current Line
-				if (regexSymbols.test(lines[currentLine].charAt(i)))
+				// Check current Line
+				if (regexRules.test(currentLine.charAt(i))) {
 					number.isValid = true;
-				// Done: check next Line
-				if (nextLine) {
-					if (regexSymbols.test(lines[nextLine].charAt(i)))
+				}
+				// check next Line
+				if (nextLine !== null && nextLine !== undefined) {
+					if (regexRules.test(nextLine.charAt(i))) {
 						number.isValid = true;
+					}
 				}
 			}
 		});
-		// console.log(allNumbers);
-
-		// console.log(lines, allNumbers);
-
-
-        let solution = 0
-        allNumbers.filter((number) => number.isValid).forEach((number) => solution += number.number)
-        // console.log(allNumbers)
+		let solution = 0;
+		allNumbers
+			.filter((number) => number.isValid)
+			.forEach((number) => (solution += number.number));
+		// console.log(allNumbers, allNumbers.length);
 		return solution.toString();
 	}
 
