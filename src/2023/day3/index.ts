@@ -7,13 +7,12 @@ class Day3 extends Day {
 
 	solveForPartOne(input: string): string {
 		let regexSymbols = new RegExp("\\W", "g");
-		let regexRules = new RegExp("[-#$%&*/@+=]", "g");
+		// Bug: this regex is completely buggy..
+		let regexRules = new RegExp("[^0-9\\.]|\\*", "g");
 
 		let lines = input.split("\n");
 
-		let numbersPerLineStrings = lines.map((line) =>
-			line.split(regexSymbols).filter((value) => value !== "")
-		);
+		let numbersPerLineStrings = lines.map((line) => line.split(regexSymbols).filter((value) => value !== ""));
 		let duplicatedNumbers: string[] = [];
 		let allNumbers: InputNumber[] = [];
 
@@ -22,9 +21,7 @@ class Day3 extends Day {
 			numbersPerLineStrings[indexOfLine].forEach((number) => {
 				if (numberToSkip === number) {
 					numberToSkip = "";
-				} else if (
-					numbersPerLineStrings[indexOfLine].filter((value) => value === number).length > 1
-				) {
+				} else if (numbersPerLineStrings[indexOfLine].filter((value) => value === number).length > 1) {
 					allNumbers.push(new InputNumber(indexOfLine, +number, line.indexOf(number)));
 					allNumbers.push(new InputNumber(indexOfLine, +number, line.lastIndexOf(number)));
 					numberToSkip = number;
@@ -36,43 +33,64 @@ class Day3 extends Day {
 
 		allNumbers.forEach((number) => {
 			let startIndex = number.indexStart === 0 ? 0 : number.indexStart - 1;
-			let endIndex = number.indexEnd;
-			let prevLine = number.line === 1 ? 0 : number.line === 0 ? null : number.line - 1;
-			let nextLine = number.line === lines.length - 1 ? null : number.line + 1;
-			if (prevLine !== null) {
-				if (regexRules.test(lines[prevLine].slice(startIndex, endIndex + 1))) {
-					number.isValid = true;
+			let lineLength = lines[number.line].length - 1;
+			let prevLine: string | null = null;
+			let currentLine: string | null = null;
+			let nextLine: string | null = null;
+			let endIndex = () => {
+				return number.indexEnd === lineLength ? number.indexEnd : number.indexEnd + 1;
+			};
+			const getLine = () => {
+				if (number.line === 0) {
+					prevLine = null;
+					currentLine = lines[number.line].slice(startIndex, endIndex()+ 1);
+					nextLine = lines[number.line + 1].slice(startIndex, endIndex()+ 1);
+				} else if (number.line === lineLength) {
+					nextLine = null;
+					currentLine = lines[number.line].slice(startIndex, endIndex()+ 1);
+					prevLine = lines[number.line - 1].slice(startIndex, endIndex()+ 1);
+				} else {
+					prevLine = lines[number.line - 1].slice(startIndex, endIndex()+ 1);
+					currentLine = lines[number.line].slice(startIndex, endIndex()+ 1);
+					nextLine = lines[number.line + 1].slice(startIndex, endIndex()+ 1);
+				}
+			};
+			getLine();
+
+			if (prevLine){
+				if (regexRules.test(prevLine)){
+					number.isValid = true
 				}
 			}
-			if (regexRules.test(lines[number.line].slice(startIndex, endIndex + 1))) {
-				number.isValid = true;
-			}
-			if (nextLine) {
-				if (regexRules.test(lines[nextLine].slice(startIndex, endIndex + 1))) {
+			if (currentLine) {
+				if (regexRules.test(currentLine)) {
 					number.isValid = true;
 				}
 			}
 
+			if (nextLine) {
+				if (regexRules.test(nextLine)) {
+					number.isValid = true;
+				}
+			}
 			console.log("");
 			console.log("");
 			console.log("");
 			console.log("");
 			console.log("");
-			console.log('');
-			if (prevLine) console.log(lines[prevLine]);
-			console.log(lines[number.line]);
-			if (nextLine) console.log(lines[nextLine]);
-			console.log("");
-			if (prevLine) console.log(lines[prevLine].slice(startIndex, endIndex + 1), "prevLine");
-			console.log(lines[number.line].slice(startIndex, endIndex + 1), "currentLine");
-			if (nextLine) console.log(lines[nextLine].slice(startIndex, endIndex + 1), "nextLine");
+			console.log(prevLine, "prevLine");
+			console.log(currentLine, "currentLine");
+			console.log(nextLine, "nextLine");
 			console.log("");
 			// test currentLine
+			// console.log("index-start", startIndex);
+			// console.log("index-end", endIndex());
+			// console.log("line length", lineLength);
 			console.log("has Duplicate", duplicatedNumbers.includes(number.number.toString()));
 			console.log("is Valid", number.isValid);
 			console.log("");
 
-			console.log(number);
+			// console.log(number);
 		});
 		let solution = 0;
 		allNumbers.filter((number) => number.isValid).forEach((number) => (solution += number.number));
@@ -98,7 +116,7 @@ export class InputNumber {
 		this.number = inputNumber;
 		this.indexStart = indexStart;
 
-		this.indexEnd = indexStart + this.number.toString().length;
+		this.indexEnd = indexStart + this.number.toString().length - 1;
 	}
 }
 
