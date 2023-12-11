@@ -6,7 +6,6 @@ class Day3 extends Day {
 	}
 
 	solveForPartOne(input: string): string {
-		
 		return solutionOne(input);
 	}
 
@@ -21,24 +20,27 @@ export class InputNumber {
 	prevLine: string;
 	currentLine: string;
 	nextLine: string;
+	indexOfCurrentLine : number
 	number: number;
 	isValid: boolean = false;
 
-	constructor(inputNumber: number, prevLine: string, currentLine: string, nextLine: string) {
+	constructor(inputNumber: number, prevLine: string, currentLine: string, nextLine: string, indexOfCurrentLine: number) {
 		this.prevLine = prevLine;
 		this.currentLine = currentLine;
 		this.nextLine = nextLine;
 		this.number = inputNumber;
+		this.indexOfCurrentLine = indexOfCurrentLine
 	}
 }
 
 let regexSymbols = new RegExp("\\W", "g");
 let regexRules = new RegExp("[^0-9.]", "g");
+let regexRulesP2 = new RegExp("[*]", "g");
 
-const solutionOne = (input: string) => {
-	let lines = input.split("\n");
-	let numbersPerLineStrings = lines.map((line) => line.split(regexSymbols).filter((value) => value !== ""));
+const getAllNumbers = (lines: string[]) => {
 	let allNumbers: InputNumber[] = [];
+
+	let numbersPerLineStrings = lines.map((line) => line.split(regexSymbols).filter((value) => value !== ""));
 
 	lines.forEach((line, indexOfLine) => {
 		numbersPerLineStrings[indexOfLine].forEach((number) => {
@@ -47,7 +49,7 @@ const solutionOne = (input: string) => {
 			let lineLength = line.length - 1;
 
 			let startOfStringToCheck = startIndexOfNumber === 0 ? 0 : startIndexOfNumber - 1;
-			let endOfStringToCheck = endIndexOfNumber === lineLength ? (endIndexOfNumber+ 1) : endIndexOfNumber + 2;
+			let endOfStringToCheck = endIndexOfNumber === lineLength ? endIndexOfNumber + 1 : endIndexOfNumber + 2;
 
 			let prevLine = "";
 			let currentLine = "";
@@ -68,12 +70,19 @@ const solutionOne = (input: string) => {
 				}
 			};
 			getLine();
-			allNumbers.push(new InputNumber(+number, prevLine, currentLine, nextLine));
+			allNumbers.push(new InputNumber(+number, prevLine, currentLine, nextLine, indexOfLine));
 			for (let i = startIndexOfNumber; i < endIndexOfNumber + 1; i++) {
 				line = line.substring(0, i) + "." + line.substring(i + 1);
 			}
 		});
 	});
+	return allNumbers
+};
+
+const solutionOne = (input: string) => {
+	let lines = input.split("\n");
+
+	const allNumbers = getAllNumbers(lines);
 
 	allNumbers.forEach((number) => {
 		let matchPrev = number.prevLine.match(regexRules);
@@ -87,11 +96,19 @@ const solutionOne = (input: string) => {
 	let solution = 0;
 	let validNumbers = allNumbers.map((number) => (number.isValid ? number.number : 0));
 	validNumbers.forEach((number) => (solution += number));
-	return solution.toString()
+	return solution.toString();
 };
 
-const solutionTwo = (input:string) => {
+const solutionTwo = (input: string) => {
+	const lines = input.split("\n");
+	const allNumbers = getAllNumbers(lines);
 
-
-	return 'test'
-}
+	console.log(
+		allNumbers.filter((number) => {
+			if (regexRulesP2.test(number.prevLine) || regexRulesP2.test(number.currentLine) || regexRulesP2.test(number.nextLine)) {
+				return number;
+			}
+		})
+	);
+	return "test";
+};
