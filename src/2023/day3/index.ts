@@ -1,3 +1,4 @@
+import { log } from "console";
 import { Day } from "../../day";
 
 class Day3 extends Day {
@@ -131,17 +132,26 @@ const solutionTwo = (input: string) => {
 				let localMatches: Match[] = [];
 				// start checking surroundings
 				// check horizontal left
+				// Bug: testCase failed -> toLeft
+				// if (row === 7 && column ===6){
+				// 	console.log('wwwwwwwwwttttttttccccccccc')
+				// 	console.log(lines[row].slice(column-2, column+3))
+				// 	console.log(lines[row][column-1])
+				// 	console.log(!isNaN(+lines[row][column-1]))
+				// }
 				if (!isNaN(+lines[row][column - 1])) {
-					localMatches.push(new Match(row, column));
+					localMatches.push(new Match(row, (column - 1)));
 				}
 				// check horizontal right
 				if (!isNaN(+lines[row][column + 1])) {
-					localMatches.push(new Match(row, column));
+					localMatches.push(new Match(row, (column +1)));
 				}
 				// check horizontal above
-				for (let col = column - 1; col < column + 2; col++) {
-					if (!isNaN(+lines[row - 1][col])) {
-						localMatches.push(new Match(row - 1, col));
+				if (row > 0) {
+					for (let col = column - 1; col < column + 2; col++) {
+						if (!isNaN(+lines[row - 1][col])) {
+							localMatches.push(new Match(row - 1, col));
+						}
 					}
 				}
 				// check horizontal below
@@ -156,12 +166,12 @@ const solutionTwo = (input: string) => {
 		}
 	}
 
-	let solution = 0
+	let solution = 0;
 
 	matches.forEach((potentialMatch) => {
 		let rowCoordinates: number[] = [];
 		let colCoordinates: number[] = [];
-		
+
 		potentialMatch.forEach((coordinate) => {
 			if (!rowCoordinates.includes(coordinate.row)) rowCoordinates.push(coordinate.row);
 			if (!colCoordinates.includes(coordinate.column)) colCoordinates.push(coordinate.column);
@@ -172,17 +182,24 @@ const solutionTwo = (input: string) => {
 				return number;
 			}
 		});
-		
+		// console.log("");
+		// console.log("");
+		// console.log("");
+		// console.log("");
+		// console.log("");
+
 		// console.log("rowCoords", rowCoordinates);
 		// console.log("colCoords", colCoordinates);
-		
+		// console.log('')
 		// console.log("realMatch", realMatch);
-		if (realMatch.length > 1){
-			let matchNumber = 1
+		if (realMatch.length === 2) {
+			console.log(realMatch)
+			let matchNumber = 1;
 			realMatch.forEach((number) => {
-				matchNumber = number.number * matchNumber
-			})
-			solution += matchNumber
+				matchNumber = number.number * matchNumber;
+			});
+			console.log(matchNumber)
+			solution += matchNumber;
 		}
 		// console.log('potential-match', potentialMatch)
 	});
