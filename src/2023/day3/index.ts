@@ -123,9 +123,11 @@ const solutionTwo = (input: string) => {
 	for (let row = 0; row < lines.length; row++) {
 		for (let column = 0; column < lines[row].length; column++) {
 			let currentCharacter = lines[row][column];
-			let starMatch = currentCharacter.match(regexRules);
+			let starMatch = currentCharacter.match(regexStar);
 
 			if (starMatch !== null && starMatch.length > 0) {
+				// console.log("matched character", currentCharacter);
+				// console.log(lines[row].slice(column - 2, column + 3));
 				let localMatches: Match[] = [];
 				// start checking surroundings
 				// check horizontal left
@@ -153,21 +155,39 @@ const solutionTwo = (input: string) => {
 			}
 		}
 	}
-	let realMatches: InputNumber[] = [];
+
+	let solution = 0
 
 	matches.forEach((potentialMatch) => {
-		const rowCoordinates: number[] = [];
-		const colCoordinates: number[] = [];
+		let rowCoordinates: number[] = [];
+		let colCoordinates: number[] = [];
+		
 		potentialMatch.forEach((coordinate) => {
-			rowCoordinates.push(coordinate.row);
-			colCoordinates.push(coordinate.column);
+			if (!rowCoordinates.includes(coordinate.row)) rowCoordinates.push(coordinate.row);
+			if (!colCoordinates.includes(coordinate.column)) colCoordinates.push(coordinate.column);
 		});
-		console.log('rowCoordinates', rowCoordinates)
-		console.log('colCoordinates', colCoordinates)
-		console.log('break')
+
+		let realMatch = allNumbers.filter((number) => {
+			if (rowCoordinates.includes(number.indexOfCurrentLine) && colCoordinates.some((r) => number.numberIndices.includes(r))) {
+				return number;
+			}
+		});
+		
+		// console.log("rowCoords", rowCoordinates);
+		// console.log("colCoords", colCoordinates);
+		
+		// console.log("realMatch", realMatch);
+		if (realMatch.length > 1){
+			let matchNumber = 1
+			realMatch.forEach((number) => {
+				matchNumber = number.number * matchNumber
+			})
+			solution += matchNumber
+		}
+		// console.log('potential-match', potentialMatch)
 	});
 
-	console.log(matches, realMatches);
+	// console.log(matches, realMatches);
 
-	return "test";
+	return solution.toString();
 };
