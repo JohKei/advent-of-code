@@ -1,4 +1,3 @@
-import { link } from "fs";
 import { Day } from "../../day";
 
 class Day3 extends Day {
@@ -7,12 +6,12 @@ class Day3 extends Day {
 	}
 
 	solveForPartOne(input: string): string {
-		solutionOne(input);
-		return "";
+		
+		return solutionOne(input);
 	}
 
 	solveForPartTwo(input: string): string {
-		return input;
+		return solutionTwo(input);
 	}
 }
 
@@ -88,5 +87,11 @@ const solutionOne = (input: string) => {
 	let solution = 0;
 	let validNumbers = allNumbers.map((number) => (number.isValid ? number.number : 0));
 	validNumbers.forEach((number) => (solution += number));
-	console.log(solution);
+	return solution.toString()
 };
+
+const solutionTwo = (input:string) => {
+
+
+	return 'test'
+}
