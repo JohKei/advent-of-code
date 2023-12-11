@@ -20,22 +20,38 @@ export class InputNumber {
 	prevLine: string;
 	currentLine: string;
 	nextLine: string;
-	indexOfCurrentLine : number
+	indexOfCurrentLine: number;
 	number: number;
 	isValid: boolean = false;
+	numberIndices: number[] = [];
 
-	constructor(inputNumber: number, prevLine: string, currentLine: string, nextLine: string, indexOfCurrentLine: number) {
+	constructor(inputNumber: number, prevLine: string, currentLine: string, nextLine: string, indexOfCurrentLine: number, indexStart: number) {
 		this.prevLine = prevLine;
 		this.currentLine = currentLine;
 		this.nextLine = nextLine;
 		this.number = inputNumber;
-		this.indexOfCurrentLine = indexOfCurrentLine
+		this.indexOfCurrentLine = indexOfCurrentLine;
+
+		let numberLength = inputNumber.toString().length;
+		for (let i = indexStart; i < indexStart + numberLength; i++) {
+			this.numberIndices.push(i);
+		}
+	}
+}
+
+export class Match {
+	row: number;
+	column: number;
+
+	constructor(row: number, col: number) {
+		this.row = row;
+		this.column = col;
 	}
 }
 
 let regexSymbols = new RegExp("\\W", "g");
 let regexRules = new RegExp("[^0-9.]", "g");
-let regexRulesP2 = new RegExp("[*]", "g");
+let regexStar = new RegExp("[*]", "g");
 
 const getAllNumbers = (lines: string[]) => {
 	let allNumbers: InputNumber[] = [];
@@ -70,13 +86,13 @@ const getAllNumbers = (lines: string[]) => {
 				}
 			};
 			getLine();
-			allNumbers.push(new InputNumber(+number, prevLine, currentLine, nextLine, indexOfLine));
+			allNumbers.push(new InputNumber(+number, prevLine, currentLine, nextLine, indexOfLine, startIndexOfNumber));
 			for (let i = startIndexOfNumber; i < endIndexOfNumber + 1; i++) {
 				line = line.substring(0, i) + "." + line.substring(i + 1);
 			}
 		});
 	});
-	return allNumbers
+	return allNumbers;
 };
 
 const solutionOne = (input: string) => {
@@ -102,13 +118,56 @@ const solutionOne = (input: string) => {
 const solutionTwo = (input: string) => {
 	const lines = input.split("\n");
 	const allNumbers = getAllNumbers(lines);
+	let matches: Array<Match[]> = [];
 
-	console.log(
-		allNumbers.filter((number) => {
-			if (regexRulesP2.test(number.prevLine) || regexRulesP2.test(number.currentLine) || regexRulesP2.test(number.nextLine)) {
-				return number;
+	for (let row = 0; row < lines.length; row++) {
+		for (let column = 0; column < lines[row].length; column++) {
+			let currentCharacter = lines[row][column];
+			let starMatch = currentCharacter.match(regexRules);
+
+			if (starMatch !== null && starMatch.length > 0) {
+				let localMatches: Match[] = [];
+				// start checking surroundings
+				// check horizontal left
+				if (!isNaN(+lines[row][column - 1])) {
+					localMatches.push(new Match(row, column));
+				}
+				// check horizontal right
+				if (!isNaN(+lines[row][column + 1])) {
+					localMatches.push(new Match(row, column));
+				}
+				// check horizontal above
+				for (let col = column - 1; col < column + 2; col++) {
+					if (!isNaN(+lines[row - 1][col])) {
+						localMatches.push(new Match(row - 1, col));
+					}
+				}
+				// check horizontal below
+				for (let col = column - 1; col < column + 2; col++) {
+					if (!isNaN(+lines[row + 1][col])) {
+						localMatches.push(new Match(row + 1, col));
+					}
+				}
+
+				if (localMatches.length > 1) matches.push(localMatches);
 			}
-		})
-	);
+		}
+	}
+	let realMatches: InputNumber[] = [];
+
+	matches.forEach((potentialMatch) => {
+		const rowCoordinates: number[] = [];
+		const colCoordinates: number[] = [];
+		potentialMatch.forEach((coordinate) => {
+			rowCoordinates.push(coordinate.row);
+			colCoordinates.push(coordinate.column);
+		});
+		console.log('rowCoordinates', rowCoordinates)
+		console.log('colCoordinates', colCoordinates)
+		console.log('break')
+	});
+
+	console.log(matches, realMatches);
+
 	return "test";
 };
