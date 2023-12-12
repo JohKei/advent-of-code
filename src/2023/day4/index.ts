@@ -18,7 +18,7 @@ class Day4 extends Day {
 export default new Day4();
 
 const getSolutionOne = (input: string) => {
-	let lines = splitInput(input);
-    console.log(lines)
+	let lines = splitInput(input)
+
 	return "test";
 };
