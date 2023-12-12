@@ -5,5 +5,22 @@ export const splitInput = (input: string): string[] => {
 };
 
 export const splitStringIntoNumbers = (input: string) => {
-    return input.split(whiteSpace).filter((number) => number !== "").flatMap((number) => +number);
+    
+    return input.split(whiteSpace).filter((number) => {
+        if (number !== "" && !isNaN(+number)){
+            return number
+        }
+    }).flatMap((number) => +number );
 };
+
+export const test = (input: string) => {
+    return input
+		.replace(/\D/g, " ")
+		.split(whiteSpace)
+		.filter((number) => {
+			if (number !== "" && !isNaN(+number)) {
+				return number;
+			}
+		})
+		.flatMap((number) => +number);
+}
