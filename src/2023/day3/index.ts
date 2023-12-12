@@ -132,7 +132,6 @@ const solutionTwo = (input: string) => {
 				let localMatches: Match[] = [];
 				// start checking surroundings
 				// check horizontal left
-				// Bug: testCase failed -> toLeft
 				// if (row === 7 && column ===6){
 				// 	console.log('wwwwwwwwwttttttttccccccccc')
 				// 	console.log(lines[row].slice(column-2, column+3))

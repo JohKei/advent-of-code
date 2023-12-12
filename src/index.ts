@@ -3,12 +3,14 @@ import day0 from './2023/day0/index';
 import day1 from './2023/day1/index';
 import day2 from './2023/day2/index';
 import day3 from './2023/day3/index';
+import day4 from './2023/day4/index';
 // MORE IMPORTS HERE
 const days: Day[] = [
     day0,
     day1,
     day2,
     day3,
+    day4,
     // MORE DAYS HERE
 ];
 
