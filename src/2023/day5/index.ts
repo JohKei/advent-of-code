@@ -18,20 +18,31 @@ class Day5 extends Day {
 export default new Day5();
 
 type Map = {
-	[key: string]: string;
+	[key: string]: {[key: string]: any};
 };
 
-class MapNames {
-	"seed-to-soil map:": Map = {};
-	"soil-to-fertilizer map:": Map = {};
-	"fertilizer-to-water map:": Map = {};
-	"water-to-light map:": Map = {};
-	"light-to-temperature map:": Map = {};
-	"temperature-to-humidity map:": Map = {};
-	"humidity-to-location map:": Map = {};
-}
+// class MapNames {
+// 	"seed-to-soil map:": Map = {};
+// 	"soil-to-fertilizer map:": Map = {};
+// 	"fertilizer-to-water map:": Map = {};
+// 	"water-to-light map:": Map = {};
+// 	"light-to-temperature map:": Map = {};
+// 	"temperature-to-humidity map:": Map = {};
+// 	"humidity-to-location map:": Map = {};
+// }
 
-const mapNames = new MapNames();
+const mapNames = [
+	"seed-to-soil map:",
+	"soil-to-fertilizer map:",
+	"fertilizer-to-water map:",
+	"water-to-light map:",
+	"light-to-temperature map:",
+	"temperature-to-humidity map:",
+	"temperature-to-humidity map:",
+	"humidity-to-location map:",
+];
+
+const maps: Map = {};
 
 const solutionOne = (input: string) => {
 	let lines = splitInput(input);
@@ -49,15 +60,24 @@ const mapMaps = (lines: string[]) => {
 	let currentLine = "";
 	let currentNumbers = 0;
 	lines.forEach((line) => {
-		if (line !== "" && !(line in mapNames)) currentNumbers++;
-		if (line in mapNames) {
-			currentNumbers = 0;
+		if (line !== "" && !(mapNames.includes(line))) currentNumbers++;
 
-			currentLine = line;
+		if (mapNames.includes(line)) {
+			currentNumbers = 0;
+			currentLine = mapNames[mapNames.indexOf(line)]
+			maps[currentLine] = {}
 		} else {
-			// @ts-ignore
-			mapNames[currentLine][currentNumbers] = splitStringIntoNumbers(line);
+			maps[currentLine][currentNumbers] = splitStringIntoNumbers(line);
 		}
 	});
-	console.log(mapNames);
+	let mapKeys = Object.keys(maps)
+
+	mapKeys.forEach((key) => {
+		console.log(maps[key])
+	})
+
+
+	// console.log(maps)
+
+	// console.log(maps);
 };
