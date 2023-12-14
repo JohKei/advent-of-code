@@ -18,18 +18,8 @@ class Day5 extends Day {
 export default new Day5();
 
 type Map = {
-	[key: string]: {[key: string]: any};
+	[key: string]: { [key: string]: any };
 };
-
-// class MapNames {
-// 	"seed-to-soil map:": Map = {};
-// 	"soil-to-fertilizer map:": Map = {};
-// 	"fertilizer-to-water map:": Map = {};
-// 	"water-to-light map:": Map = {};
-// 	"light-to-temperature map:": Map = {};
-// 	"temperature-to-humidity map:": Map = {};
-// 	"humidity-to-location map:": Map = {};
-// }
 
 const mapNames = [
 	"seed-to-soil map:",
@@ -42,42 +32,61 @@ const mapNames = [
 	"humidity-to-location map:",
 ];
 
+type Seed = {
+	[key: string]: SeedLocations;
+};
+
+class SeedLocations {
+	soil: number = 0;
+	fertilizer: number = 0;
+	water: number = 0;
+	light: number = 0;
+	temperature: number = 0;
+	humidity: number = 0;
+	location: number = 0;
+}
 const maps: Map = {};
+const seeds: Seed[] = [];
 
 const solutionOne = (input: string) => {
 	let lines = splitInput(input);
-	let seeds = splitStringIntoNumbers(lines[0]);
+	let splittedSeeds:number[] = splitStringIntoNumbers(lines[0]);
+
 	lines.splice(0, 1);
 	lines = lines.filter((line) => line !== "");
-	// console.log(seeds)
+
 	mapMaps(lines);
 
+	splittedSeeds.forEach((seed) => {
+		seeds.push({[seed]: new SeedLocations()})
+	});
+
+	console.log(seeds, maps)
 	return "hello";
 };
 
 const mapMaps = (lines: string[]) => {
-	// console.log(lines)
 	let currentLine = "";
 	let currentNumbers = 0;
 	lines.forEach((line) => {
-		if (line !== "" && !(mapNames.includes(line))) currentNumbers++;
+		if (line !== "" && !mapNames.includes(line)) currentNumbers++;
 
 		if (mapNames.includes(line)) {
 			currentNumbers = 0;
-			currentLine = mapNames[mapNames.indexOf(line)]
-			maps[currentLine] = {}
+			currentLine = mapNames[mapNames.indexOf(line)];
+			maps[currentLine] = {};
 		} else {
 			maps[currentLine][currentNumbers] = splitStringIntoNumbers(line);
 		}
 	});
-	let mapKeys = Object.keys(maps)
-
-	mapKeys.forEach((key) => {
-		console.log(maps[key])
-	})
-
-
-	// console.log(maps)
-
-	// console.log(maps);
 };
+
+// class MapNames {
+// 	"seed-to-soil map:": Map = {};
+// 	"soil-to-fertilizer map:": Map = {};
+// 	"fertilizer-to-water map:": Map = {};
+// 	"water-to-light map:": Map = {};
+// 	"light-to-temperature map:": Map = {};
+// 	"temperature-to-humidity map:": Map = {};
+// 	"humidity-to-location map:": Map = {};
+// }
