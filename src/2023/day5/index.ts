@@ -45,23 +45,26 @@ class SeedLocations {
 	humidity: number = 0;
 	location: number = 0;
 }
+
 const maps: Map = {};
 const seeds: Seed[] = [];
+let seedNumbers = [];
 
 const solutionOne = (input: string) => {
 	let lines = splitInput(input);
-	let splittedSeeds:number[] = splitStringIntoNumbers(lines[0]);
+	let seedNumbers = splitStringIntoNumbers(lines[0]);
 
 	lines.splice(0, 1);
 	lines = lines.filter((line) => line !== "");
 
 	mapMaps(lines);
 
-	splittedSeeds.forEach((seed) => {
-		seeds.push({[seed]: new SeedLocations()})
+	seedNumbers.forEach((seed) => {
+		seeds.push({ [seed]: new SeedLocations() });
 	});
 
-	console.log(seeds, maps)
+	calculateRanges();
+	// console.log(seeds, maps)
 	return "hello";
 };
 
@@ -81,12 +84,30 @@ const mapMaps = (lines: string[]) => {
 	});
 };
 
-// class MapNames {
-// 	"seed-to-soil map:": Map = {};
-// 	"soil-to-fertilizer map:": Map = {};
-// 	"fertilizer-to-water map:": Map = {};
-// 	"water-to-light map:": Map = {};
-// 	"light-to-temperature map:": Map = {};
-// 	"temperature-to-humidity map:": Map = {};
-// 	"humidity-to-location map:": Map = {};
-// }
+const calculateRanges = () => {
+	// console.log(maps)
+
+	for (let key in maps) {
+		if (maps.hasOwnProperty(key)) {
+			// console.log(key)
+
+			for (let map in maps[key]) {
+				// console.log(maps[key][map], maps[key])
+				// Todo: extract ranges
+				// Todo: forEachMap -> get source-range[]
+				// Todo: forEachMap -> get destination-range[]
+				maps[key][`range-${map}`] = maps[key][map][2];
+				// [0] = destinationRangeStart
+				// [1] = sourceRangeStart
+				let sourceRangeStart = maps[key][map][1]
+				let sourceRangeEnd = maps[key][map][0];
+				let destinationRangeStart
+				let destinationRangeEnd
+				
+				console.log(maps[key], sourceRangeStart, sourceRangeEnd);
+			}
+		}
+	}
+};
+
+const assignRangesToSeeds = (seeds: Seed, maps: Map) => {};
