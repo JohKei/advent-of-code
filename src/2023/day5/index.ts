@@ -86,28 +86,38 @@ const mapMaps = (lines: string[]) => {
 
 const calculateRanges = () => {
 	// console.log(maps)
-
 	for (let key in maps) {
 		if (maps.hasOwnProperty(key)) {
 			// console.log(key)
 
 			for (let map in maps[key]) {
 				// console.log(maps[key][map], maps[key])
-				// Todo: extract ranges
-				// Todo: forEachMap -> get source-range[]
-				// Todo: forEachMap -> get destination-range[]
-				maps[key][`range-${map}`] = maps[key][map][2];
-				// [0] = destinationRangeStart
-				// [1] = sourceRangeStart
-				let sourceRangeStart = maps[key][map][1]
-				let sourceRangeEnd = maps[key][map][0];
-				let destinationRangeStart
-				let destinationRangeEnd
-				
-				console.log(maps[key], sourceRangeStart, sourceRangeEnd);
+				// Important [0] = destinationRangeStart
+				// Important [1] = sourceRangeStart
+				// Important range = is start+range - 1 -> I don't need to do this because Array.from() already returns this the right way
+				let range = maps[key][map][2];
+				let sourceRangeStart = maps[key][map][1];
+				let sourceRangeEnd = maps[key][map][1] + range;
+				let destinationRangeStart = maps[key][map][0];
+				let destinationRangeEnd = maps[key][map][0] + range;
+				// console.log("source-range-start", sourceRangeStart);
+				// console.log("source-range-end", sourceRangeEnd);
+				// console.log("destination-range-start", destinationRangeStart);
+				// console.log("destination-range-end", destinationRangeEnd);
+
+				maps[key][`source-range-${map}`] = Array.from(
+					{ length: sourceRangeEnd - sourceRangeStart / 1 },
+					(value, index) => sourceRangeStart + index * 1
+				);
+
+				maps[key][`destination-range-${map}`] = Array.from(
+					{ length: destinationRangeEnd - destinationRangeStart / 1 },
+					(value, index) => destinationRangeStart + index * 1
+				);
 			}
 		}
 	}
+	// console.log(maps)
 };
 
 const assignRangesToSeeds = (seeds: Seed, maps: Map) => {};
