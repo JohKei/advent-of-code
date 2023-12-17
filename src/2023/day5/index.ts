@@ -11,7 +11,7 @@ class Day5 extends Day {
 	}
 
 	solveForPartTwo(input: string): string {
-		return input;
+		return solutionTwo(input);
 	}
 }
 
@@ -82,9 +82,7 @@ const solutionOne = (input: string) => {
 		return lowestLocation < currentLocation ? lowest : current;
 	});
 
-	console.log(seedWithLowestLocation);
-	// console.log(seeds)
-	return "test";
+	return seedWithLowestLocation[Object.keys(seedWithLowestLocation)[0]]["humidity-to-location map:"].toString();
 };
 
 const mapMaps = (lines: string[]) => {
@@ -157,3 +155,33 @@ const assignRangesToSeeds = () => {
 		}
 	});
 };
+
+
+const solutionTwo = (input:string) => {
+	let lines = splitInput(input);
+
+	
+
+	// seedNumbers = splitStringIntoNumbers(lines[0]);
+
+	lines.splice(0, 1);
+	lines = lines.filter((line) => line !== "");
+
+	mapMaps(lines);
+
+	seedNumbers.forEach((seed) => {
+		seeds.push({ [seed]: new SeedLocations() });
+	});
+
+	calculateRanges();
+	assignRangesToSeeds();
+
+	let seedWithLowestLocation = seeds.reduce((lowest, current) => {
+		const lowestLocation = Object.values(lowest)[0]["humidity-to-location map:"];
+		const currentLocation = Object.values(current)[0]["humidity-to-location map:"];
+
+		return lowestLocation < currentLocation ? lowest : current;
+	});
+
+	return seedWithLowestLocation[Object.keys(seedWithLowestLocation)[0]]["humidity-to-location map:"].toString();
+} 
