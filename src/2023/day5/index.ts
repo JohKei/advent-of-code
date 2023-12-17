@@ -28,7 +28,6 @@ const mapNames = [
 	"water-to-light map:",
 	"light-to-temperature map:",
 	"temperature-to-humidity map:",
-	"temperature-to-humidity map:",
 	"humidity-to-location map:",
 ];
 
@@ -37,22 +36,22 @@ type Seed = {
 };
 
 class SeedLocations {
-	soil: number = 0;
-	fertilizer: number = 0;
-	water: number = 0;
-	light: number = 0;
-	temperature: number = 0;
-	humidity: number = 0;
-	location: number = 0;
+	"seed-to-soil map:": number = 0;
+	"soil-to-fertilizer map:": number = 0;
+	"fertilizer-to-water map:": number = 0;
+	"water-to-light map:": number = 0;
+	"light-to-temperature map:": number = 0;
+	"temperature-to-humidity map:": number = 0;
+	"humidity-to-location map:": number = 0;
 }
 
 const maps: Map = {};
 const seeds: Seed[] = [];
-let seedNumbers = [];
+let seedNumbers: number[] = [];
 
 const solutionOne = (input: string) => {
 	let lines = splitInput(input);
-	let seedNumbers = splitStringIntoNumbers(lines[0]);
+	seedNumbers = splitStringIntoNumbers(lines[0]);
 
 	lines.splice(0, 1);
 	lines = lines.filter((line) => line !== "");
@@ -64,8 +63,20 @@ const solutionOne = (input: string) => {
 	});
 
 	calculateRanges();
-	// console.log(seeds, maps)
-	return "hello";
+	assignRangesToSeeds();
+
+
+	let seedWithLowestLocation = seeds.reduce((lowest, current) => {
+		const lowestLocation = Object.values(lowest)[0]["humidity-to-location map:"];
+		const currentLocation = Object.values(current)[0]["humidity-to-location map:"];
+
+		return lowestLocation < currentLocation ? lowest : current;
+	});
+
+	console.log(seedWithLowestLocation)
+
+
+	return 'test';
 };
 
 const mapMaps = (lines: string[]) => {
@@ -85,25 +96,15 @@ const mapMaps = (lines: string[]) => {
 };
 
 const calculateRanges = () => {
-	// console.log(maps)
 	for (let key in maps) {
 		if (maps.hasOwnProperty(key)) {
-			// console.log(key)
 
 			for (let map in maps[key]) {
-				// console.log(maps[key][map], maps[key])
-				// Important [0] = destinationRangeStart
-				// Important [1] = sourceRangeStart
-				// Important range = is start+range - 1 -> I don't need to do this because Array.from() already returns this the right way
 				let range = maps[key][map][2];
 				let sourceRangeStart = maps[key][map][1];
 				let sourceRangeEnd = maps[key][map][1] + range;
 				let destinationRangeStart = maps[key][map][0];
 				let destinationRangeEnd = maps[key][map][0] + range;
-				// console.log("source-range-start", sourceRangeStart);
-				// console.log("source-range-end", sourceRangeEnd);
-				// console.log("destination-range-start", destinationRangeStart);
-				// console.log("destination-range-end", destinationRangeEnd);
 
 				maps[key][`source-range-${map}`] = Array.from(
 					{ length: sourceRangeEnd - sourceRangeStart / 1 },
@@ -117,7 +118,39 @@ const calculateRanges = () => {
 			}
 		}
 	}
-	// console.log(maps)
 };
 
-const assignRangesToSeeds = (seeds: Seed, maps: Map) => {};
+const assignRangesToSeeds = () => {
+	seeds.forEach((seed) => {
+		for (let key in seed) {
+			if (seed.hasOwnProperty(key)) {
+				let sourceRanges = [];
+				let destinations = [];
+				let matchingIndex = 0;
+				let source = +key;
+
+				mapNames.forEach((keyString) => {
+					if (seed[key].hasOwnProperty(keyString)) {
+						seed[key][keyString as keyof SeedLocations];
+						sourceRanges = Object.keys(maps[keyString]).filter((mapKey) => mapKey.match("source-range"));
+						destinations = Object.keys(maps[keyString]).filter((mapKey) => mapKey.match("destination-range"));
+
+						for (let i = 0; i < sourceRanges.length; i++) {
+							matchingIndex = maps[keyString][sourceRanges[i]].indexOf(+source);
+
+							if (matchingIndex !== -1) {
+								if (maps[keyString][sourceRanges[i]][matchingIndex] === source) {
+									source = maps[keyString][destinations[i]][matchingIndex];
+									seed[key][keyString as keyof SeedLocations] = maps[keyString][destinations[i]][matchingIndex];
+									i = sourceRanges.length
+								}
+							} else {
+								seed[key][keyString as keyof SeedLocations] = source;
+							}
+						}
+					}
+				});
+			}
+		}
+	});
+};
